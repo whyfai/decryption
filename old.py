@@ -27,7 +27,7 @@ def decrypt(word):
                 return print(shifted_word.lower())
     return print("word cannot be decrypted")
 
-decrypt('gbsb')
+decrypt('khoor')
 
 end_time = time.perf_counter()
 elapsed_time = end_time - start_time

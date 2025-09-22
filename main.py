@@ -16,17 +16,17 @@ def encrypt(alphabet,plain,shift):
     return ''.join(temp)
 
 def decrypt(word):
-    for loops in range(26):
+    for loops in range(25):
         shifted_word = encrypt(alphabet,word,loops)
         with open(f'data/{shifted_word[0]}.json', 'r') as file:
             words_dictionary = json.load(file)
             file.close()
-        for decrypted_word in words_dictionary.keys():
-            if decrypted_word == shifted_word:
+        for valid_word in words_dictionary.keys():
+            if valid_word == shifted_word:
                 return print(shifted_word.lower())
     return print("word cannot be decrypted")
 
-decrypt('GBSB')
+decrypt('KHOOR')
 
 end_time = time.perf_counter()
 elapsed_time = end_time - start_time
