@@ -1,26 +1,34 @@
 import json
-import time
 
-start_time = time.perf_counter()
-
+# Define the alphabet to be used in the cipher for shifting
 alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
+# Functions to encrypt and decrypt messages
 def encrypt(plain,shift,alphabet=alphabet):
-    return ''.join([alphabet[(alphabet.index(i)+shift)%26] for i in plain])
+    split_words = [x for x in plain.split()]
+    for i in range(len(split_words)):
+        split_words[i] = ''.join([alphabet[(alphabet.index(letter)+shift)%26] for letter in split_words[i]])
+    return ' '.join(split_words)
 
-def decrypt(word):
-    for loops in range(25):
-        shifted_word = encrypt(word,loops)
-        with open(f'data/{shifted_word[0]}.json', 'r') as file: 
-            keys = json.load(file).keys()
-        for valid_word in keys:
-            if valid_word == shifted_word: 
-                return print(shifted_word.lower())
-    return print("word cannot be decrypted")
+def decrypt(plain):
+    for loops in range(25): 
+        shifted_word = encrypt(plain,loops)
+        word_list = shifted_word.split()
+        valid_count = 0
+        for word in word_list:
+            with open(f'data/{word[0]}.json', 'r') as file: 
+                if word in json.load(file).keys():
+                    valid_count += 1
+        if valid_count == len(word_list):
+            return shifted_word
+    return "word could not be decrypted"
 
-print(encrypt('HELLO',29))
-decrypt('KHOOR')
-
-end_time = time.perf_counter()
-elapsed_time = end_time - start_time
-print(f"Execution time: {elapsed_time:.6f} seconds")
+# Main program loop
+while True:
+    mode = input("input mode encrypt or decrypt [quit/exit to exit]: ").lower()
+    if mode in ['e', 'encrypt']:
+        print(encrypt(input("input word to encrypt: ").upper(),int(input("input shift value: "))))
+    elif mode in ['d', 'decrypt']:
+        print(decrypt(input("input word to decrypt: ").upper()))
+    elif mode in ['q', 'quit', 'exit']:
+        break
